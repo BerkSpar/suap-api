@@ -1,0 +1,20 @@
+name: suap_api
+description: SUAP Api - Dart Package.
+version: 0.0.1
+author: Felipe Passos <berkspar@gmail.com>
+homepage: https://github.com/BerkSpar/suap-api
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  meta: ^1.2.3
+  http: ^0.12.2
+  json_annotation: ^3.0.1
+
+dev_dependencies:
+  test: ^1.15.3
+
+  build_verify: ^1.1.1
+  build_runner: ^1.10.0
+  json_serializable: ^3.4.1
