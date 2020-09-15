@@ -135,3 +135,92 @@ class NotaEtapa2 {
   }
 }
 
+class Usuario {
+  int id;
+  String matricula;
+  String nomeUsual;
+  String email;
+  String urlFoto75x100;
+  String tipoVinculo;
+  Vinculo vinculo;
+
+  Usuario(
+      {this.id,
+      this.matricula,
+      this.nomeUsual,
+      this.email,
+      this.urlFoto75x100,
+      this.tipoVinculo,
+      this.vinculo});
+
+  Usuario.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    matricula = json['matricula'];
+    nomeUsual = json['nome_usual'];
+    email = json['email'];
+    urlFoto75x100 = json['url_foto_75x100'];
+    tipoVinculo = json['tipo_vinculo'];
+    vinculo =
+        json['vinculo'] != null ? new Vinculo.fromJson(json['vinculo']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['matricula'] = this.matricula;
+    data['nome_usual'] = this.nomeUsual;
+    data['email'] = this.email;
+    data['url_foto_75x100'] = this.urlFoto75x100;
+    data['tipo_vinculo'] = this.tipoVinculo;
+    if (this.vinculo != null) {
+      data['vinculo'] = this.vinculo.toJson();
+    }
+    return data;
+  }
+}
+
+class Vinculo {
+  String matricula;
+  String nome;
+  String curso;
+  String campus;
+  String situacao;
+  String cotaSistec;
+  String cotaMec;
+  String situacaoSistemica;
+
+  Vinculo(
+      {this.matricula,
+      this.nome,
+      this.curso,
+      this.campus,
+      this.situacao,
+      this.cotaSistec,
+      this.cotaMec,
+      this.situacaoSistemica});
+
+  Vinculo.fromJson(Map<String, dynamic> json) {
+    matricula = json['matricula'];
+    nome = json['nome'];
+    curso = json['curso'];
+    campus = json['campus'];
+    situacao = json['situacao'];
+    cotaSistec = json['cota_sistec'];
+    cotaMec = json['cota_mec'];
+    situacaoSistemica = json['situacao_sistemica'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['matricula'] = this.matricula;
+    data['nome'] = this.nome;
+    data['curso'] = this.curso;
+    data['campus'] = this.campus;
+    data['situacao'] = this.situacao;
+    data['cota_sistec'] = this.cotaSistec;
+    data['cota_mec'] = this.cotaMec;
+    data['situacao_sistemica'] = this.situacaoSistemica;
+    return data;
+  }
+}
+

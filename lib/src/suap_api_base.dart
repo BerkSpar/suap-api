@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
-import 'package:http/http.dart' as http;
 import 'package:suap_api/src/suap_api_model.dart';
 
 class SUAP {
@@ -13,26 +13,29 @@ class SUAP {
   }
 
   Future<List<Boletim>> getBoletins({@required int ano, @required int semestre}) async => (await client.getJson(endpoint: 'minhas-informacoes', args: ['boletim', ano, semestre]) as List).map((json) => Boletim.fromJson(json)).toList();
+  Future<Usuario> getUsuario() async => Usuario.fromJson(await client.getJson(endpoint: 'minhas-informacoes', args: ['meus-dados']));
 }
 
-class SUAPClient extends http.BaseClient {
+class SUAPClient {
   final AppConfiguration config;
-  http.Client _inner;
+  Dio _dio;
+  Options _options;
   SUAPAuth auth;
 
+
   SUAPClient(this.auth, {this.config}) {
-    _inner = http.Client();
+    _dio = Dio();
+    _options = Options();
+
+    _options.headers.addAll({
+      'Authorization' : auth.getAuth(),
+      'Content-Type' : 'application/json; charset=utf-8',
+      'user-agent' : config.api.userAgent,
+    });
   }
 
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) {
-    request.headers['Authorization'] = auth.getAuth();
-    request.headers['Content-Type'] = 'text/html; charset=utf-8';
-    request.headers['user-agent'] = config.api.userAgent;
-    return _inner.send(request);
-  }
-
-  Uri getApiUrl({@required String endpoint, List<Object> args}) {
+  
+  String getApiUrl({@required String endpoint, List<Object> args}) {
     var baseUrl = config.api.baseUrl + '/' + config.api.version + '/';
     if (endpoint != null && endpoint.isNotEmpty) {
       baseUrl += endpoint + '/';
@@ -40,13 +43,13 @@ class SUAPClient extends http.BaseClient {
     for (var arg in args) {
       baseUrl += (arg?.toString() ?? '') + '/';
     }
-    return Uri.tryParse(baseUrl);
+    return baseUrl;
   }
 
   dynamic getJson({@required String endpoint, List<Object> args}) async {
     final uri = getApiUrl(endpoint: endpoint, args: args);
-    final response = await get(uri);
-    return jsonDecode(response.body);
+    final response = await _dio.get(uri, options: _options);
+    return response.data;
   }
 }
 
